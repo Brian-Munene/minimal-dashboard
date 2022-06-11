@@ -44,6 +44,7 @@ export default function Login(){
             }).then(response=>response.json())
             .then(res=>{
                 if (res.access_token) {
+                    //TODO: make redux work for login fields
                     dispatch(saveToken(res.data.token))
                 }
                 console.log(res)
