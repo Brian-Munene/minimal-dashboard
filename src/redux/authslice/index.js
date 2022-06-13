@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import AuthService from "../../services/auth.service";
 
 const authSlice = createSlice({
     name: "authentication",
@@ -28,19 +29,40 @@ export const AUTH_ACTIONS = authSlice.actions
 
 export const saveToken = (data) => {
     return async (dispatch) => {
-        dispatch(AUTH_ACTIONS.login(data))
+        AuthService.login(data)
+            .then(response => {
+                if (response.data.token) {
+                    console.log('here')
+                    localStorage.setItem('user',JSON.stringify(response.data.user))
+                    localStorage.setItem('token', response.data.token)
+                    dispatch(AUTH_ACTIONS.login(response.data.user))
+                }
+                if (response.status === 403) {
+                    console.error('Login error')
+                }
+                return response
+            })
+
     }
 }
 
-export const deleteToken = (data) => {
+export const deleteToken = () => {
     return async (dispatch) => {
+        AuthService.logout()
         dispatch(AUTH_ACTIONS.logout())
     }
 }
 
 export const saveUpdateUserDataState = (data) => {
     return  (dispatch) => {
-        dispatch(AUTH_ACTIONS.updateDataState(data))
+        AuthService.updateProfile(data)
+            .then( response => {
+                console.log(response)
+                dispatch(AUTH_ACTIONS.updateDataState(data))
+            })
+            .catch(error => {
+                console.error(error.response)
+            })
     }
 }
 

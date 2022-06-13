@@ -33,23 +33,7 @@ export default function Login(){
                 clientType: "web"
         };
         console.log(loginFields)
-        const endpoint=`https://gateway-service-5qoj75li4a-uc.a.run.app/api/v1/auth/login`;
-        fetch(endpoint,
-            {
-            method:'POST',
-            headers: {
-            'Content-Type': 'application/json'
-            },
-            body:JSON.stringify(loginFields)
-            }).then(response=>response.json())
-            .then(res=>{
-                if (res.access_token) {
-                    //TODO: make redux work for login fields
-                    dispatch(saveToken(res.data.token))
-                }
-                console.log(res)
-            })
-            .catch(error=>console.log(error))
+        dispatch(saveToken(loginFields))
     }
 
     return(
