@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import {useDispatch, useSelector} from "react-redux";
+import {saveToken} from "../redux/authslice";
 import { loginFields } from "../constants/formFields";
 import FormAction from "./FormAction";
 import FormExtra from "./FormExtra";
@@ -9,6 +11,9 @@ let fieldsState = {};
 fields.forEach(field=>fieldsState[field.id]='');
 
 export default function Login(){
+    const {isAuthenticated} = useSelector((state) => state.auth)
+    const dispatch = useDispatch()
+
     const [loginState,setLoginState]=useState(fieldsState);
 
     const handleChange=(e)=>{
@@ -28,21 +33,7 @@ export default function Login(){
                 clientType: "web"
         };
         console.log(loginFields)
-        const endpoint=`https://gateway-service-5qoj75li4a-uc.a.run.app/api/v1/auth/login`;
-        fetch(endpoint,
-            {
-            method:'POST',
-            headers: {
-            'Content-Type': 'application/json'
-            },
-            body:JSON.stringify(loginFields)
-            }).then(response=>response.json())
-            .then(res=>{
-
-
-                console.log(res)
-            })
-            .catch(error=>console.log(error))
+        dispatch(saveToken(loginFields))
     }
 
     return(
