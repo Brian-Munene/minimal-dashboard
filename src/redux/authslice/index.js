@@ -29,20 +29,7 @@ export const AUTH_ACTIONS = authSlice.actions
 
 export const saveToken = (data) => {
     return async (dispatch) => {
-        AuthService.login(data)
-            .then(response => {
-                if (response.data.token) {
-                    console.log('here')
-                    localStorage.setItem('user',JSON.stringify(response.data.user))
-                    localStorage.setItem('token', response.data.token)
-                    dispatch(AUTH_ACTIONS.login(response.data.user))
-                }
-                if (response.status === 403) {
-                    console.error('Login error')
-                }
-                return response
-            })
-
+        dispatch(AUTH_ACTIONS.login(data))
     }
 }
 

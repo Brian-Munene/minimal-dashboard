@@ -8,7 +8,6 @@ class AuthService {
         return axios
             .post(`${DEV_API}login`, user)
             .then(response => {
-                console.log(response.data)
                 return response.data
             })
             .catch(error=> {

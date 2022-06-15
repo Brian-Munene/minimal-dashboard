@@ -1,10 +1,13 @@
 import { useState } from 'react';
 import {useDispatch, useSelector} from "react-redux";
+import { useNavigate } from 'react-router-dom';
 import {saveToken} from "../redux/authslice";
 import { loginFields } from "../constants/formFields";
 import FormAction from "./FormAction";
 import FormExtra from "./FormExtra";
 import Input from "./Input";
+import AuthService from "../services/auth.service";
+import { toast } from 'react-toastify';
 
 const fields = loginFields;
 let fieldsState = {};
@@ -13,6 +16,7 @@ fields.forEach(field=>fieldsState[field.id]='');
 export default function Login(){
     const {isAuthenticated} = useSelector((state) => state.auth)
     const dispatch = useDispatch()
+    const navigate = useNavigate();
 
     const [loginState,setLoginState]=useState(fieldsState);
 
@@ -23,6 +27,17 @@ export default function Login(){
     const handleSubmit=(e)=>{
         e.preventDefault();
         authenticateUser();
+
+        if (isAuthenticated ===true){
+            navigate("/")
+            toast.success("Welcome back");
+        }
+        else{
+            console.log('NO')
+            toast.error("Login Error");
+        }
+        navigate("/")
+
     }
 
     //Handle Login API Integration here
@@ -32,8 +47,21 @@ export default function Login(){
                 password:loginState['password'],
                 clientType: "web"
         };
-        console.log(loginFields)
-        dispatch(saveToken(loginFields))
+
+        AuthService.login(loginFields)
+            .then(response => {
+                localStorage.setItem('user',JSON.stringify(response.data.user))
+                dispatch(saveToken(response.data.user))
+                if (response.data.token) {
+                    localStorage.setItem('user',JSON.stringify(response.data.user))
+                    localStorage.setItem('token', response.data.token)
+                    dispatch(saveToken(response.data.user))
+                }
+                else {
+                    console.error('Login error')
+                }
+                return response
+            })
     }
 
     return(
