@@ -9,7 +9,6 @@ import {fetchCountries} from '../redux/countriesSlice'
 
 export default function CountriesPage(){
     const toastID = "first";
-    // const user = useSelector((state) => state.auth.data)
     const countries = useSelector((state) => state.countries)
 
     const dispatch = useDispatch()

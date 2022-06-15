@@ -1,13 +1,11 @@
 import Header from "../components/Header"
-import UserProfile from "../components/UserProfile"
 
 export default function UserProfilePage(){
     return(
         <>
             <Header
-            heading="Update your profile"
+                heading="You do not have access to the countries"
             />
-            <UserProfile/>
         </>
     )
 }
