@@ -5,6 +5,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {useState} from "react";
 import CountriesService from "../services/countries.service";
 import { toast } from 'react-toastify';
+import {fetchCountries} from '../redux/countriesSlice'
 
 export default function CountriesPage(){
     const toastID = "first";
@@ -21,6 +22,7 @@ export default function CountriesPage(){
                     if (response.status === 200) {
                         console.log(response.data)
                         setCountriesState(response.data)
+                        dispatch(fetchCountries(countries))
                     }
                     else {
                         console.error('Error fetching data')
