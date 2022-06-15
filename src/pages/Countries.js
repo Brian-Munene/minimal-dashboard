@@ -9,13 +9,12 @@ import {fetchCountries} from '../redux/countriesSlice'
 
 export default function CountriesPage(){
     const toastID = "first";
-    const user = useSelector((state) => state.auth.data)
+    // const user = useSelector((state) => state.auth.data)
     const countries = useSelector((state) => state.countries)
 
     const dispatch = useDispatch()
     const [countriesState, setCountriesState] = useState(countries)
     useEffect(()=> {
-        if (user.permissions?.includes('view_countries')) {
             CountriesService.getCountries()
                 .then(response => {
 
@@ -30,12 +29,7 @@ export default function CountriesPage(){
                             toastId: toastID
                         })
                     }
-                })}
-        else{
-            toast.warning('You are not allowed to view countries', {
-                toastId: toastID
-            })
-        }
+                })
     })
     return(
         <>
