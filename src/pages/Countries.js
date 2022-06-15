@@ -5,22 +5,23 @@ import {useDispatch, useSelector} from "react-redux";
 import {useState} from "react";
 import CountriesService from "../services/countries.service";
 import { toast } from 'react-toastify';
+import {fetchCountries} from '../redux/countriesSlice'
 
 export default function CountriesPage(){
     const toastID = "first";
-    const user = useSelector((state) => state.auth.data)
+    // const user = useSelector((state) => state.auth.data)
     const countries = useSelector((state) => state.countries)
 
     const dispatch = useDispatch()
     const [countriesState, setCountriesState] = useState(countries)
     useEffect(()=> {
-        if (user.permissions?.includes('view_countries')) {
             CountriesService.getCountries()
                 .then(response => {
 
                     if (response.status === 200) {
                         console.log(response.data)
                         setCountriesState(response.data)
+                        dispatch(fetchCountries(countries))
                     }
                     else {
                         console.error('Error fetching data')
@@ -28,12 +29,7 @@ export default function CountriesPage(){
                             toastId: toastID
                         })
                     }
-                })}
-        else{
-            toast.warning('You are not allowed to view countries', {
-                toastId: toastID
-            })
-        }
+                })
     })
     return(
         <>
