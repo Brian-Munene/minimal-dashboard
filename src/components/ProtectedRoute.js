@@ -20,7 +20,6 @@ const checkAuth=(routeName)=>{
     const user = JSON.parse(localStorage.getItem('user'))
 
     if(routeName === '/'){
-        console.log('Here we go')
         return !!user && user.permissions?.includes('view_countries')
     }
     else if (routeName === '/profile') {

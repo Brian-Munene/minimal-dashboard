@@ -1,30 +1,32 @@
 import { useState } from 'react';
-// import { profileFields } from "../constants/formFields";
+import { profileFields } from "../constants/formFields";
 import FormAction from "./FormAction";
-// import Input from "./Input";
-import {useSelector} from "react-redux";
+import Input from "./Input";
+import {useSelector, useDispatch} from "react-redux";
+import AuthService from '../services/auth.service';
+import {saveToken} from "../redux/authslice";
 
-// const fields = profileFields;
+const fields = profileFields;
 let fieldsState = {};
 
-// FIXME: fix update user data
 export default function UserProfile(){
+    const dispatch = useDispatch()
     const [profileState,setprofileState]=useState(fieldsState);
     const user = useSelector((state) => state.auth.data)
-    // fields.forEach(field=>{
-    //     fieldsState[field.id]=''
-    //     Object.keys(user).forEach(function(key) {
-    //         if (key === field.id) {
-    //             console.log(key, user[key]);
-    //             if(user[key] === null || user[key] === ''){
-    //                 fieldsState[field.value] = ''
-    //             }
-    //             else{
-    //                 fieldsState[field.value]= user[key]
-    //             }
-    //         }
-    //     });
-    // });
+
+    fields.forEach(field=>{
+        Object.keys(user).forEach(function(key) {
+            if (key === field.id) {
+                console.log(key, user[key]);
+                if(user[key] === null || user[key] === ''){
+                    fieldsState[field.value] = ''
+                }
+                else{
+                    fieldsState[field.value]= user[key]
+                }
+            }
+        });
+    });
     const handleChange=(e)=>{
         setprofileState({...profileState,[e.target.id]:e.target.value})
     }
@@ -42,26 +44,38 @@ export default function UserProfile(){
                 dateOfBirth:profileState['dateOfBirth'],
                 avatar:profileState['avatar']
         };
-        console.log(profileFields)
-        const endpoint=`https://gateway-service-5qoj75li4a-uc.a.run.app/api/v1/auth/login`;
-        fetch(endpoint,
-            {
-            method:'POST',
-            headers: {
-            'Content-Type': 'application/json'
-            },
-            body:JSON.stringify(profileFields)
-            }).then(response=>response.json())
-            .then(res=>{
-
-                console.log(res)
-            })
-            .catch(error=>console.log(error))
+        // console.log(profileFields)
+        AuthService.updateProfile(profileFields)
+        .then(response => {
+            if (response.data) {
+                dispatch(saveToken(response))
+            }
+            else {
+                console.error('Login error')
+            }
+            return response
+        })
     }
 
     return(
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-            <div className="-space-y-px">
+            {
+                fields.map(field=>
+                        <Input
+                            key={field.id}
+                            handleChange={handleChange}
+                            value={profileState[field.id]}
+                            labelText={field.labelText}
+                            labelFor={field.labelFor}
+                            id={field.id}
+                            name={field.name}
+                            type={field.type}
+                            isRequired={field.isRequired}
+                            placeholder={field.placeholder}
+                    />
+                )
+            }
+            {/* <div className="-space-y-px">
                 <label id="firstName" htmlFor="firstName" className="sr-only">First Name</label>
                 <input className="rounded-md appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-purple-500 focus:border-purple-500 focus:z-10 sm:text-sm"
                        onChange={handleChange}
@@ -104,7 +118,7 @@ export default function UserProfile(){
                        type="text"
                        placeholder="Avatar"
                 />
-            </div>
+            </div> */}
             <FormAction handleSubmit={handleSubmit} text="Submit"/>
         </form>
     )
