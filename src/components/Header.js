@@ -3,8 +3,13 @@ import AuthService from "../services/auth.service";
 
 export default function Header({
     heading,
+    paragraph,
+    linkUrl,
+    linkName
     }){
     const navigate = useNavigate();
+    const user = JSON.parse(localStorage.getItem('user'))
+
     return(
         <div className="mb-10">
             <div className="flex justify-center">
@@ -16,15 +21,21 @@ export default function Header({
             <h2 className="mt-6 mb-6 text-center text-3xl font-extrabold text-gray-900">
                 {heading}
             </h2>
-            <div className="flex justify-evenly">
-                <Link to="/" className="font-medium text-purple-600 hover:text-purple-500">Countries</Link>
-                <Link to="/profile" className="font-medium text-purple-600 hover:text-purple-500">Update Profile</Link>
-                <p className="font-medium text-purple-600 hover:text-purple-500 cursor-pointer" onClick={() => {
-                    AuthService.logout()
-                    navigate('/login')
-                }} >Logout</p>
-            </div>
-
+            { user ?
+                <div className="flex justify-evenly">
+                    <Link to="/" className="font-medium text-purple-600 hover:text-purple-500">Countries</Link>
+                    <Link to="/profile" className="font-medium text-purple-600 hover:text-purple-500">Update Profile</Link>
+                    <p className="font-medium text-purple-600 hover:text-purple-500 cursor-pointer" onClick={() => {
+                        AuthService.logout()
+                        navigate('/login')
+                    }} >Logout</p>
+                </div>
+                : 
+                <div className="flex justify-center">
+                    {paragraph}
+                    <Link to={linkUrl} className="font-medium text-purple-600 hover:text-purple-500 ml-2">{linkName}</Link>
+                </div>
+            }
 
         </div>
     )

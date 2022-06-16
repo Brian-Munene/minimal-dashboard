@@ -1,8 +1,10 @@
 import React from "react";
 import { Navigate, Outlet } from "react-router-dom";
 
-const ProtectedRoute = ({ isAllowed, redirectPath='/login', children }) => {
-    if (!isAllowed) {
+
+const ProtectedRoute = ({ requestPath, redirectPath='/login', children }) => {
+
+    if (!checkAuth(requestPath)) {
         return <Navigate to={redirectPath} replace />;
     }
     
@@ -10,3 +12,19 @@ const ProtectedRoute = ({ isAllowed, redirectPath='/login', children }) => {
 };
 
 export default ProtectedRoute;
+
+
+
+
+const checkAuth=(routeName)=>{
+    const user = JSON.parse(localStorage.getItem('user'))
+
+    if(routeName === '/'){
+        console.log('Here we go')
+        return !!user && user.permissions?.includes('view_countries')
+    }
+    else if (routeName === '/profile') {
+        return !!user
+    }
+
+}

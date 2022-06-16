@@ -49,9 +49,6 @@ export default function Login(){
 
         AuthService.login(loginFields)
             .then(response => {
-                // localStorage.setItem('user', JSON.stringify(response.data.user))
-                // dispatch(saveToken(response.data.user))
-
                 if (response.data.token) {
                     localStorage.setItem('user',JSON.stringify(response.data.user))
                     localStorage.setItem('token', response.data.token)
