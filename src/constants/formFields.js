@@ -29,7 +29,7 @@ const profileFields = [
         name:"firstName",
         type:"text",
         autoComplete:"firstName",
-        isRequired:true,
+        isRequired:false,
         placeholder:"First Name" 
     },
     {
@@ -39,7 +39,7 @@ const profileFields = [
         name:"lastName",
         type:"text",
         autoComplete:"lastName",
-        isRequired:true,
+        isRequired:false,
         placeholder:"Last Name" 
     },
     {
@@ -49,7 +49,7 @@ const profileFields = [
         name:"dateOfBirth",
         type:"date",
         autoComplete:"dateOfBirth",
-        isRequired:true,
+        isRequired:false,
         placeholder:"Date of Birth" 
     },
     {
@@ -59,7 +59,7 @@ const profileFields = [
         name:"avatar",
         type:"text",
         autoComplete:"avatar",
-        isRequired:true,
+        isRequired:false,
         placeholder:"Avatar" 
     }
 

@@ -9,6 +9,7 @@ import Input from "./Input";
 import AuthService from "../services/auth.service";
 import { toast } from 'react-toastify';
 
+//FIXME: Toast message after login has a wierd error
 const fields = loginFields;
 let fieldsState = {};
 fields.forEach(field=>fieldsState[field.id]='');
@@ -23,20 +24,19 @@ export default function Login(){
     const handleChange=(e)=>{
         setLoginState({...loginState,[e.target.id]:e.target.value})
     }
-
+    const toastMessage = ''
+    
     const handleSubmit=(e)=>{
         e.preventDefault();
         authenticateUser();
-
+        console.log('here', authenticateUser())
         if (isAuthenticated ===true){
             navigate("/")
             toast.success("Welcome back");
         }
         else{
-            toast.error("Login Error");
+            toast.error(authenticateUser());
         }
-        // navigate("/")
-
     }
 
     //Handle Login API Integration here
@@ -49,21 +49,20 @@ export default function Login(){
 
         AuthService.login(loginFields)
             .then(response => {
-                // localStorage.setItem('user', JSON.stringify(response.data.user))
-                // dispatch(saveToken(response.data.user))
-
                 if (response.data.token) {
                     localStorage.setItem('user',JSON.stringify(response.data.user))
                     localStorage.setItem('token', response.data.token)
                     dispatch(saveToken(response.data.user))
+                    return response
                 }
-                else {
-                    console.error('Login error')
+                if (response.status === 400) {
+                    console.log("here")
+                    console.error(response.data.errors[0].message)
+                    toastMessage = response.data.errors[0].message
                 }
-                return response
-            })
+                // return response
+        })
     }
-
     return(
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
             <div className="-space-y-px">

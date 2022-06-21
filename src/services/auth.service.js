@@ -11,6 +11,7 @@ class AuthService {
                 return response.data
             })
             .catch(error=> {
+                console.log(error.response)
                 return error.response
             })
     }
@@ -20,14 +21,14 @@ class AuthService {
         localStorage.removeItem('token');
     }
     async updateProfile(data) {
-        const token = localStorage.getItem('fmsToken')
-
+        const token = localStorage.getItem('token')
         await axios.post(`${DEV_API}update-profile`, data, {
             headers: {
                 Authorization: `Bearer ${token}`
             }
         })
             .then(response => {
+                console.log(response)
                 return response
             })
             .catch(error => {
