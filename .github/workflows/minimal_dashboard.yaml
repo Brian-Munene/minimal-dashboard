@@ -6,13 +6,21 @@ jobs:
     job1:
         name: Ubuntu
         runs-on: ubuntu-latest
+        steps:
+        - run: date
     job2:
         name: Windows
         runs-on: windows-latest
+        steps:
+        - run: date
     job3:
         name: MacOS
         runs-on: macos-latest
+        steps:
+        - run: date
     job4:
         name: Combo
         runs-on: ubuntu-18.04
         needs: [job1, job2, job3]
+        steps:
+        - run: date
